@@ -4,13 +4,12 @@ on:
     branches: [ "main" ]
   push:
     branches: [ "main" ]
-    
+
 jobs:
   stage: 
     runs-on: ubuntu-latest
     environment:
       name: stage
-
     steps:
       - uses: actions/checkout@v2
       - name: Set Env Vars on Vercel Project
