@@ -12,12 +12,6 @@ jobs:
       name: stage
     steps:
       - uses: actions/checkout@v2
-      - name: Set Env Vars on Vercel Project
-        uses: dkershner6/vercel-set-env-action@v1
-        with:
-          token: ${{ secrets.VERCEL_TOKEN }}
-          projectName: ${{ secrets.VERCEL_APP_NAME }}
-          envVariableKeys: VERCEL_TOKEN,VERCEL_APP_NAME
       - name: deploy to vercel      
         uses: amondnet/vercel-action@v20
         with:
