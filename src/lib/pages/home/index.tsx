@@ -1,3 +1,9 @@
+import { Layout } from '~/lib/layout';
+
 export const Home = () => {
-  return <h1>hello world</h1>;
+  return (
+    <Layout>
+      <h1>hello world</h1>
+    </Layout>
+  );
 };
