@@ -1,15 +1,19 @@
+import { TriangleDownIcon } from '@chakra-ui/icons';
 import {
-  Button,
   Flex,
-  Input,
-  InputGroup,
   Wrap,
   WrapItem,
+  Button,
+  Center,
+  ChakraProvider,
 } from '@chakra-ui/react';
 import axios from 'axios';
-import { useEffect, useState } from 'react';
+import Link from 'next/link';
+import React, { useState, useEffect } from 'react';
 
 import { PokeCard } from '~/lib/components/Card';
+import { LoadingProgressBar } from '~/lib/components/LoadingProgressBar';
+import { Navbar } from '~/lib/components/Navbar';
 
 interface IPokemon {
   name: string;
@@ -18,47 +22,114 @@ interface IPokemon {
 
 export const Home = () => {
   const [pokemons, setPokemons] = useState<IPokemon[]>([]);
-  const [countPokemons, setCountPokemons] = useState(20);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
+  const [countPokemons, setCountPokemons] = useState(20);
+  const [loading, setLoading] = useState(false);
+
+  const fetchPokemons = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(
+        `https://pokeapi.co/api/v2/pokemon/?limit=${countPokemons}&offset=${
+          (currentPage - 1) * countPokemons
+        }`
+      );
+      setPokemons(response.data.results);
+      setTotalPages(Math.ceil(response.data.count / countPokemons));
+    } catch (error) {
+      console.error('Error fetching Pokémon data in fetchPokemons:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    const fetchPokemons = async () => {
-      try {
-        const response = await axios.get(
-          `https://pokeapi.co/api/v2/pokemon/?limit=${countPokemons}`
-        );
-        setPokemons(response.data.results);
-      } catch (error) {
-        // console.error('Error fetching Pokémon data:', error);
-      }
-    };
-
     fetchPokemons();
-  }, [countPokemons]);
+  }, [currentPage, countPokemons]);
 
-  //console.log(pokemons);
+  const handleLoadMore = async () => {
+    try {
+      setLoading(true);
+      setCountPokemons((prevCount) => prevCount + 5);
+      setCurrentPage(1);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSearch = async () => {
+    try {
+      setLoading(true);
+      const response = await axios.get(
+        `https://pokeapi.co/api/v2/pokemon/?limit=241`
+      );
+      const filteredPokemons = response.data.results.filter(
+        (pokemon: IPokemon) =>
+          pokemon.name.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+      setPokemons(filteredPokemons);
+      setTotalPages(Math.ceil(filteredPokemons.length / countPokemons));
+      setCurrentPage(1);
+    } catch (error) {
+      console.error('Error fetching Pokémon data in handleSearch:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleInputChange = async (term: string) => {
+    setSearchTerm(term);
+    await handleSearch();
+  };
+
+  const handleHomeClick = async () => {
+    try {
+      setLoading(true);
+      setCurrentPage(1);
+      setCountPokemons(20);
+      setSearchTerm('');
+      fetchPokemons();
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <Flex justify="flex-start" align="flex-start" w="100vw" h="100vh">
-      <InputGroup size="lg">
-        <Input
-          placeholder="Pesquisa"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+    <ChakraProvider>
+      <Flex direction="column" w="100vw" h="100vh">
+        <Navbar
+          searchTerm={searchTerm}
+          onSearchChange={handleInputChange}
+          onHomeClick={handleHomeClick}
         />
-      </InputGroup>
-      <Wrap spacing={4}>
-        {pokemons
-          .filter((pokemon: IPokemon) =>
-            pokemon.name.toLowerCase().includes(searchTerm.toLowerCase())
-          )
-          .map((pokemon: IPokemon) => (
+        <Wrap spacing={4} justify="center" mt={20}>
+        {pokemons.map((pokemon: IPokemon) => (
             <WrapItem key={pokemon.name}>
-              <PokeCard name={pokemon.name} url={pokemon.url} />
+              <Link href={`/pokemonid/${pokemon.name}`}>
+                <PokeCard name={pokemon.name} url={pokemon.url} />
+              </Link>
             </WrapItem>
           ))}
-      </Wrap>
-      <Button onClick={() => setCountPokemons(countPokemons + 5)}>+++</Button>
-    </Flex>
+        </Wrap>
+        <Center mt={4}>
+          <Button
+            onClick={handleLoadMore}
+            disabled={currentPage >= totalPages}
+            size="lg"
+            colorScheme="teal"
+            leftIcon={<TriangleDownIcon />}
+          >
+            Carregar Mais
+          </Button>
+        </Center>
+        {loading && (
+          <Center mt={4}>
+            <LoadingProgressBar loading={false} />
+          </Center>
+        )}
+      </Flex>
+    </ChakraProvider>
   );
 };

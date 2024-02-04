@@ -1,18 +1,27 @@
-import { Card, Stack, CardBody, Heading, Image } from '@chakra-ui/react';
+import { Box, Text, Image } from '@chakra-ui/react';
 import axios from 'axios';
+import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 
 interface IPokeCard {
   name: string;
   url: string;
 }
+
 interface IDataPoke {
   sprites: {
     front_default: string;
   };
 }
-export const PokeCard = ({ name, url }: IPokeCard) => {
+const getIdFromUrl = (url: string) => {
+  const segments = url.split('/');
+  return segments[segments.length - 2];
+};
+
+export const PokeCard: React.FC<IPokeCard> = ({ name, url }) => {
   const [pokemonData, setPokemonData] = useState<IDataPoke | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchPokemons = async () => {
@@ -20,24 +29,46 @@ export const PokeCard = ({ name, url }: IPokeCard) => {
         const response = await axios.get(url);
         setPokemonData(response.data);
       } catch (error) {
-        // console.error('Error fetching Pokémon data:', error);
+        console.error('Error fetching Pokémon data:', error);
       }
     };
 
     fetchPokemons();
   }, [url]);
+
+  const handleCardClick = () => {
+    const pokemonId = getIdFromUrl(url);
+    router.push(`/pokemonid/${pokemonId}`);
+  };
+
+  if (!pokemonData || !pokemonData.sprites.front_default) {
+    return null; // Evitar renderização sem dados
+  }
+
   return (
-    <Card
-      direction={{ base: 'column', sm: 'row' }}
+    <Box
+      borderWidth="1px"
+      borderRadius="lg"
       overflow="hidden"
-      variant="outline"
+      p={4}
+      textAlign="center"
+      boxShadow="md"
+      bg="white"
+      transition="transform 0.3s"
+      _hover={{ transform: 'scale(1.05)' }}
+      onClick={handleCardClick}
+      cursor="pointer"
     >
-      <Stack>
-        <CardBody>
-          <Heading size="md">{name}</Heading>
-          <Image src={pokemonData?.sprites.front_default} />
-        </CardBody>
-      </Stack>
-    </Card>
+      <Image
+        src={pokemonData.sprites.front_default}
+        alt={name}
+        borderRadius="full"
+        boxSize="100px"
+        mx="auto"
+      />
+      <Text mt={2} fontWeight="semibold">
+        {name}
+      </Text>
+    </Box>
   );
 };
