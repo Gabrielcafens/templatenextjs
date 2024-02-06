@@ -1,4 +1,4 @@
-import { Box, Text, Image } from '@chakra-ui/react';
+import { Box, Text, Image, Flex } from '@chakra-ui/react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
@@ -8,54 +8,85 @@ interface IPokeCard {
   url: string;
 }
 
-interface IDataPoke {
+interface IPokemonDetails {
+  id: number;
+  weight: number;
+  height: number;
+  types: { type: { name: string } }[];
   sprites: {
     front_default: string;
   };
 }
 
-// Função utilitária para extrair o ID do Pokémon da URL fornecida pela API
-const getIdFromUrl = (url: string) => {
-  const segments = url.split('/');
-  return segments[segments.length - 2];
+const typeColors: { [key: string]: string } = {
+  water: '#6890f0',
+  fire: '#f05030',
+  grass: '#78c850',
+  electric: '#f8d030',
+  psychic: '#f85888',
+  ice: '#98d8d8',
+  dragon: '#7038f8',
+  dark: '#705848',
+  normal: '#a8a878',
+  fighting: '#903028',
+  flying: '#a890f0',
+  poison: '#a040a0',
+  ground: '#e0c068',
+  rock: '#b8a038',
+  bug: '#a8b820',
+  ghost: '#705898',
+  steel: '#b8b8d0',
+  unknown: '#68a090',
 };
 
-// Definindo o componente funcional PokeCard com base na interface IPokeCard
 export const PokeCard: React.FC<IPokeCard> = ({ name, url }) => {
-  // Estado para armazenar os dados do Pokémon após a busca na API
-  const [pokemonData, setPokemonData] = useState<IDataPoke | null>(null);
-
-  // Hook useRouter para acessar o objeto de roteamento do Next.js
+  const [pokemonDetails, setPokemonDetails] = useState<IPokemonDetails | null>(
+    null
+  );
   const router = useRouter();
 
-  // Efeito useEffect para buscar dados do Pokémon quando o componente é montado ou quando a URL muda
+  const getIdFromUrl = (url: string) => {
+    const segments = url.split('/');
+    return segments[segments.length - 2];
+  };
+
   useEffect(() => {
-    // Função assíncrona para buscar dados do Pokémon
-    const fetchPokemons = async () => {
+    const fetchPokemonDetails = async () => {
       try {
-        // Chamada à API usando Axios para obter os dados do Pokémon
         const response = await axios.get(url);
-        // Atualizando o estado com os dados obtidos
-        setPokemonData(response.data);
+        setPokemonDetails({
+          id: response.data.id,
+          weight: response.data.weight,
+          height: response.data.height,
+          types: response.data.types,
+          sprites: {
+            front_default: response.data.sprites.front_default,
+          },
+        });
       } catch (error) {
-        // Lidando com erros, caso ocorram ao buscar dados do Pokémon
+        console.error(
+          'Error fetching Pokémon details in fetchPokemonDetails:',
+          error
+        );
       }
     };
-    // Chamando a função de busca de dados quando a URL ou o componente é montado
-    fetchPokemons();
-  }, [url]); // A dependência [url] faz com que o efeito seja reexecutado quando a URL muda
-  // Função para lidar com o clique no componente PokeCard
+
+    fetchPokemonDetails();
+  }, [url]);
+
   const handleCardClick = () => {
-    // Obtendo o ID do Pokémon da URL usando a função getIdFromUrl
     const pokemonId = getIdFromUrl(url);
-    // Navegando para a página do Pokémon correspondente usando o objeto de roteamento
     router.push(`/pokemonId/${pokemonId}`);
   };
-  // Verificando se os dados do Pokémon ou a URL da imagem estão disponíveis
-  if (!pokemonData || !pokemonData.sprites.front_default) {
-    // Se não estiverem disponíveis, retornar null para evitar renderização
+
+  if (
+    !pokemonDetails ||
+    !pokemonDetails.types ||
+    !pokemonDetails.types.length
+  ) {
     return null;
   }
+
   return (
     <Box
       borderWidth="1px"
@@ -63,25 +94,44 @@ export const PokeCard: React.FC<IPokeCard> = ({ name, url }) => {
       overflow="hidden"
       p={4}
       textAlign="center"
-      boxShadow="md"
       bg="white"
-      transition="transform 0.3s"
-      _hover={{ transform: 'scale(1.05)' }}
+      boxShadow="md"
       onClick={handleCardClick}
-      cursor="pointer"
-      overflowY="auto" // Adicionando overflowY para permitir rolagem vertical
-      maxHeight="200px" // Definindo a altura máxima do Box
     >
       <Image
-        src={pokemonData.sprites.front_default}
-        alt={name}
-        borderRadius="full"
-        boxSize="100px"
+        src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonDetails.id}.png`}
+        alt={pokemonDetails.name || ''}
+        boxSize="200px"
         mx="auto"
+        mb={4}
       />
-      <Text mt={2} fontWeight="semibold" textTransform="capitalize">
+      <Text
+        mt={4}
+        fontWeight="semibold"
+        fontSize="lg"
+        textTransform="capitalize"
+      >
         {name}
       </Text>
+      <Text>ID: {pokemonDetails.id}</Text>
+      <Text>Weight: {pokemonDetails.weight}</Text>
+      <Text>Height: {pokemonDetails.height}</Text>
+      <Flex mt={2} justifyContent="center">
+        {pokemonDetails.types.map((type) => (
+          <Box
+            key={type.type.name}
+            bg={typeColors[type.type.name] || 'gray.500'}
+            color="white"
+            px={2}
+            py={1}
+            borderRadius="md"
+            mr={2}
+            fontSize="sm"
+          >
+            {type.type.name}
+          </Box>
+        ))}
+      </Flex>
     </Box>
   );
 };

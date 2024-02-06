@@ -27,50 +27,15 @@ export const Home = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [countPokemons, setCountPokemons] = useState(20);
   const [loading, setLoading] = useState(false);
-
-  // const handlePrevClick = async () => {
-  //   try {
-  //     setLoading(true);
-  //     if (currentPage > 1) {
-  //       setCountPokemons((prevCount) => prevCount - 20);
-  //       const response = await axios.get(
-  //         `https://pokeapi.co/api/v2/pokemon/?limit=${countPokemons}&offset=${
-  //           currentPage - 20
-  //         }`
-  //       );
-  //       setPokemons(response.data.results);
-  //       setCurrentPage(currentPage - 1);
-  //     }
-  //   } catch (error) {
-  //     console.error('Error fetching Pokémon data in handlePrevClick:', error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
-  // const handleNextClick = async () => {
-  //   try {
-  //     setLoading(true);
-  //     const response = await axios.get(
-  //       `https://pokeapi.co/api/v2/pokemon/?limit=${countPokemons}&offset=${currentPage}`
-  //     );
-  //     setPokemons(response.data.results);
-  //     setCurrentPage(currentPage + 1);
-  //     setCountPokemons((prevCount) => prevCount + 20);
-  //   } catch (error) {
-  //     console.error('Error fetching Pokémon data in handleNextClick:', error);
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   const fetchPokemons = async () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `https://pokeapi.co/api/v2/pokemon/?limit=20&offset=${currentPage}`
+        `https://pokeapi.co/api/v2/pokemon/?limit=20&offset=${
+          (currentPage - 1) * countPokemons // fix ID 1 sumido
+        }`
       );
-      // Atualizando o estado com os resultados da API
+
       setPokemons(response.data.results);
       setTotalPages(Math.ceil(response.data.count / countPokemons));
     } catch (error) {
