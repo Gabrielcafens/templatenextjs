@@ -1,4 +1,4 @@
-import { Box, Text, Image, Flex } from '@chakra-ui/react';
+import { Box, Text, Image, Flex, useToast } from '@chakra-ui/react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
@@ -44,7 +44,7 @@ export const PokeCard: React.FC<IPokeCard> = ({ name, url }: IPokeCard) => {
     null
   );
   const router = useRouter();
-
+  const toast = useToast();
   useEffect(() => {
     const fetchPokemonDetails = async () => {
       try {
@@ -59,15 +59,19 @@ export const PokeCard: React.FC<IPokeCard> = ({ name, url }: IPokeCard) => {
           },
         });
       } catch (error) {
-        console.error(
-          'Error fetching Pokémon details in fetchPokemonDetails:',
-          error
-        );
+        toast({
+          title: 'Error fetching Pokemon details',
+          description:
+            'There was an error fetching the details for this Pokemon.',
+          status: 'error',
+          duration: 3000,
+          isClosable: true,
+        });
       }
     };
 
     fetchPokemonDetails();
-  }, [url]);
+  }, [toast, url]);
 
   const handleCardClick = () => {
     router.push(`/pokemonId/${pokemonDetails.id}`);

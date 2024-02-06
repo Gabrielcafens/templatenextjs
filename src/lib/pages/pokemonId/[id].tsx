@@ -82,25 +82,11 @@ export const PokemonDetails: React.FC = () => {
   useEffect(() => {
     const fetchPokemonDetails = async () => {
       try {
-        if (id && /^\d+$/.test(id.toString())) {
-          const pokemonId = Number(id);
-          const response = await axios.get<IPokemonDetails>(
-            `https://pokeapi.co/api/v2/pokemon/${pokemonId}/`
-          );
-          setPokemonDetails(response.data);
-        } else {
-          console.error('Invalid Pokemon ID:', id);
-          toast({
-            title: 'Invalid Pokemon ID',
-            description:
-              'Please provide a valid Pokemon ID as a positive integer.',
-            status: 'error',
-            duration: 3000,
-            isClosable: true,
-          });
-        }
+        const response = await axios.get<IPokemonDetails>(
+          `https://pokeapi.co/api/v2/pokemon/${id}/`
+        );
+        setPokemonDetails(response.data);
       } catch (error) {
-        console.error('Error fetching Pokémon details:', error);
         toast({
           title: 'Error fetching Pokemon details',
           description:
@@ -122,11 +108,15 @@ export const PokemonDetails: React.FC = () => {
   return (
     <Box p={4} rounded="md" boxShadow="md" textAlign="center">
       {pokemonDetails ? (
-        <Flex direction={{ base: 'column' }} justify="center" align="center">
+        <Flex
+          direction={{ base: 'column-reverse' }}
+          justify="center"
+          align="center"
+        >
           <Box flex="1" textAlign="left" ml={{ base: '0', md: '4' }}>
             <Box
               width={{ base: '100%', md: '210px' }}
-              mb={{ base: '4', md: '0' }}
+              mb={{ base: '4', md: '1' }}
             >
               <Box
                 bg={typeColors[pokemonDetails.types[0].type.name] || 'teal.500'}
@@ -152,11 +142,10 @@ export const PokemonDetails: React.FC = () => {
               {pokemonDetails.types.map((type) => (
                 <Badge
                   key={type.type.name}
-                  colorScheme="teal"
                   mr={2}
                   fontSize="md"
                   borderRadius="full"
-                  paddingX={3}
+                  paddingX={30}
                   paddingY={1}
                   backgroundColor={typeColors[type.type.name] || 'black'}
                 >
@@ -195,9 +184,6 @@ export const PokemonDetails: React.FC = () => {
                   <Box>
                     <Text>{`${stat.stat.name}: ${stat.base_stat}`}</Text>
                     <Progress
-                      color={
-                        typeColors[pokemonDetails.types[0].type.name] || 'teal'
-                      }
                       value={stat.base_stat}
                       max={100}
                       size="md"
@@ -211,7 +197,6 @@ export const PokemonDetails: React.FC = () => {
             <Text fontSize="md" mt={4}>
               Base Experience:{' '}
               <Progress
-                color={typeColors[pokemonDetails.types[0].type.name] || 'teal'}
                 value={pokemonDetails.base_experience}
                 max={300}
                 size="sm"
@@ -236,7 +221,7 @@ export const PokemonDetails: React.FC = () => {
                 </Text>
               ))}
             </Text>
-            <Button onClick={handleBackClick} mt={8} colorScheme="teal">
+            <Button onClick={handleBackClick} mt={1} colorScheme="whatsapp">
               Voltar para a lista
             </Button>
           </Box>

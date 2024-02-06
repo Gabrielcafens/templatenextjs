@@ -6,11 +6,11 @@ import {
   Button,
   Center,
   ChakraProvider,
+  useToast,
 } from '@chakra-ui/react';
 import axios from 'axios';
 import Link from 'next/link';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 
 import { PokeCard } from '~/lib/components/Card';
 import { LoadingProgressBar } from '~/lib/components/LoadingProgressBar';
@@ -28,6 +28,7 @@ export const Home = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [countPokemons, setCountPokemons] = useState(0);
   const [loading, setLoading] = useState(false);
+  const toast = useToast();
   const fetchPokemons = async () => {
     try {
       setLoading(true);
@@ -38,7 +39,14 @@ export const Home = () => {
       setPokemons(response.data.results);
       setTotalPages(Math.ceil(response.data.count / countPokemons));
     } catch (error) {
-      console.error('Error fetching Pokémon data in fetchPokemons:', error);
+      toast({
+        title: 'Error fetching Pokemon details',
+        description:
+          'There was an error fetching the details for this Pokemon.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
     } finally {
       setLoading(false);
     }
@@ -62,7 +70,14 @@ export const Home = () => {
       setTotalPages(Math.ceil(filteredPokemons.length / countPokemons));
       setCurrentPage(1);
     } catch (error) {
-      console.error('Error fetching Pokémon data in handleSearch:', error);
+      toast({
+        title: 'Error fetching Pokemon details',
+        description:
+          'There was an error fetching the details for this Pokemon.',
+        status: 'error',
+        duration: 3000,
+        isClosable: true,
+      });
     } finally {
       setLoading(false);
     }
