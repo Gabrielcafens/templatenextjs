@@ -10,6 +10,7 @@ interface IPokeCard {
 
 interface IPokemonDetails {
   id: number;
+  name: string;
   weight: number;
   height: number;
   types: { type: { name: string } }[];
@@ -51,6 +52,7 @@ export const PokeCard: React.FC<IPokeCard> = ({ name, url }: IPokeCard) => {
         const response = await axios.get(url);
         setPokemonDetails({
           id: response.data.id,
+          name: response.data.name,
           weight: response.data.weight,
           height: response.data.height,
           types: response.data.types,
@@ -74,7 +76,7 @@ export const PokeCard: React.FC<IPokeCard> = ({ name, url }: IPokeCard) => {
   }, [toast, url]);
 
   const handleCardClick = () => {
-    router.push(`/pokemonId/${pokemonDetails.id}`);
+    router.push(`/pokemonId/${pokemonDetails?.id}`);
   };
 
   if (
