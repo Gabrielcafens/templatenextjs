@@ -99,11 +99,11 @@ export const PokeCard: React.FC<IPokeCard> = ({ name, url }) => {
       onClick={handleCardClick}
     >
       <Image
-        src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonDetails.id}.png`}
+        src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${pokemonDetails.id}.gif`}
         alt={pokemonDetails.name || ''}
-        boxSize="200px"
-        mx="auto"
-        mb={4}
+        width="110"
+        height="110"
+        style={{ display: 'block', margin: 'auto' }}
       />
       <Text
         mt={4}

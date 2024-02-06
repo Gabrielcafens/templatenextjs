@@ -8,31 +8,18 @@ import {
   Progress,
   Button,
   useToast,
+  Flex,
 } from '@chakra-ui/react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { useState, useEffect } from 'react';
 
-const typeColors = {
-  water: '#6890f0',
-  fire: '#f05030',
-  grass: '#78c850',
-  electric: '#f8d030',
-  psychic: '#f85888',
-  ice: '#98d8d8',
-  dragon: '#7038f8',
-  dark: '#705848',
-  normal: '#a8a878',
-  fighting: '#903028',
-  flying: '#a890f0',
-  poison: '#a040a0',
-  ground: '#e0c068',
-  rock: '#b8a038',
-  bug: '#a8b820',
-  ghost: '#705898',
-  steel: '#b8b8d0',
-  unknown: '#68a090',
-};
+interface IStat {
+  base_stat: number;
+  stat: {
+    name: string;
+  };
+}
 
 interface IPokemonDetails {
   id: number;
@@ -59,7 +46,29 @@ interface IPokemonDetails {
       url: string;
     };
   }[];
+  stats: IStat[];
 }
+
+const typeColors = {
+  water: '#6890f0',
+  fire: '#f05030',
+  grass: '#78c850',
+  electric: '#f8d030',
+  psychic: '#f85888',
+  ice: '#98d8d8',
+  dragon: '#7038f8',
+  dark: '#705848',
+  normal: '#a8a878',
+  fighting: '#903028',
+  flying: '#a890f0',
+  poison: '#a040a0',
+  ground: '#e0c068',
+  rock: '#b8a038',
+  bug: '#a8b820',
+  ghost: '#705898',
+  steel: '#b8b8d0',
+  unknown: '#68a090',
+};
 
 export const PokemonDetails: React.FC = () => {
   const router = useRouter();
@@ -102,25 +111,32 @@ export const PokemonDetails: React.FC = () => {
   return (
     <Box p={4} rounded="md" boxShadow="2xl" textAlign="center">
       {pokemonDetails ? (
-        <>
+        <Flex
+          direction={{ base: 'column', md: 'row' }}
+          justify="center"
+          align="center"
+        >
           <Box
-            bg={typeColors[pokemonDetails.types[0].type.name] || 'teal.500'}
-            p={5}
-            rounded="lg"
-            boxShadow="md"
-            mb={4}
-            mx="auto"
+            width={{ base: '100%', md: '210px' }}
+            mb={{ base: '4', md: '0' }}
           >
-            <Image
-              src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${pokemonDetails.id}.gif`}
-              alt={pokemonDetails.name || ''}
-              width="100"
-              height="100"
-              style={{ display: 'block', margin: 'auto' }}
-            />
+            <Box
+              bg={typeColors[pokemonDetails.types[0].type.name] || 'teal.500'}
+              p={5}
+              rounded="md"
+              boxShadow="md"
+            >
+              <Image
+                src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonDetails.id}.png`}
+                alt={pokemonDetails.name || ''}
+                boxSize="200px"
+                mx="auto"
+                mb={4}
+              />
+            </Box>
           </Box>
-          <Stack align="center">
-            <Text fontSize="2xl" fontWeight="bold">
+          <Box flex="1" textAlign="left" ml={{ base: '0', md: '4' }}>
+            <Text fontSize="2xl" fontWeight="bold" mt={2}>
               {pokemonDetails.name || 'Loading...'}
             </Text>
             <Text>ID: {pokemonDetails.id}</Text>
@@ -130,7 +146,7 @@ export const PokemonDetails: React.FC = () => {
                   key={type.type.name}
                   colorScheme="teal"
                   mr={2}
-                  fontSize="lg"
+                  fontSize="md"
                   borderRadius="full"
                   paddingX={3}
                   paddingY={1}
@@ -147,7 +163,7 @@ export const PokemonDetails: React.FC = () => {
                 </Badge>
               ))}
             </Stack>
-            <Text fontSize="lg" mt={4}>
+            <Text fontSize="md" mt={4}>
               Abilities:{' '}
               {pokemonDetails.abilities.map((ability, index) => (
                 <span key={index}>
@@ -164,14 +180,35 @@ export const PokemonDetails: React.FC = () => {
                 </span>
               ))}
             </Text>
+            <Text fontSize="" mt={4}>
+              Stats:
+              <Stack mt={2} spacing={3}>
+                {pokemonDetails.stats.map((stat, index) => (
+                  <Box key={index}>
+                    <Text>{`${stat.stat.name}: ${stat.base_stat}`}</Text>
+                    <Progress
+                      color={
+                        typeColors[pokemonDetails.types[0].type.name] || 'teal'
+                      }
+                      value={stat.base_stat}
+                      max={100}
+                      size="md"
+                      mt={2}
+                      rounded="full"
+                    />
+                  </Box>
+                ))}
+              </Stack>
+            </Text>
             <Text fontSize="lg" mt={4}>
               Base Experience:{' '}
               <Progress
-                colorScheme="teal"
+                color={typeColors[pokemonDetails.types[0].type.name] || 'teal'}
                 value={pokemonDetails.base_experience}
                 max={300}
                 size="sm"
                 mt={2}
+                rounded="full"
               />
               <Text mt={1}>{pokemonDetails.base_experience}</Text>
             </Text>
@@ -194,8 +231,8 @@ export const PokemonDetails: React.FC = () => {
             <Button onClick={handleBackClick} mt={8} colorScheme="teal">
               Voltar para a lista
             </Button>
-          </Stack>
-        </>
+          </Box>
+        </Flex>
       ) : (
         <Text>Loading...</Text>
       )}
