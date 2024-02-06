@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Flex,
   Wrap,
@@ -22,18 +23,16 @@ interface IPokemon {
 
 export const Home = () => {
   const [pokemons, setPokemons] = useState<IPokemon[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(0);
   const [totalPages, setTotalPages] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
-  const [countPokemons, setCountPokemons] = useState(20);
+  const [countPokemons, setCountPokemons] = useState(0);
   const [loading, setLoading] = useState(false);
   const fetchPokemons = async () => {
     try {
       setLoading(true);
       const response = await axios.get(
-        `https://pokeapi.co/api/v2/pokemon/?limit=20&offset=${
-          (currentPage - 1) * countPokemons // fix ID 1 sumido
-        }`
+        `https://pokeapi.co/api/v2/pokemon/?limit=20&offset=${countPokemons}`
       );
 
       setPokemons(response.data.results);
@@ -47,7 +46,7 @@ export const Home = () => {
 
   useEffect(() => {
     fetchPokemons();
-  }, [currentPage]);
+  }, [countPokemons]);
 
   const handleSearch = async () => {
     try {
@@ -79,7 +78,7 @@ export const Home = () => {
     try {
       setLoading(true);
       setCurrentPage(1);
-      setCountPokemons(20);
+      setCountPokemons(0);
       setSearchTerm('');
       fetchPokemons();
     } finally {
@@ -111,14 +110,14 @@ export const Home = () => {
         </Wrap>
         <Center mt={4}>
           <Button
-            onClick={() => setCurrentPage(currentPage - 20)}
+            onClick={() => setCountPokemons(countPokemons - 20)}
             mr={2}
-            disabled={currentPage === 1}
+            isDisabled={countPokemons === 0}
           >
             Prev
           </Button>
           <Button
-            onClick={() => setCurrentPage(currentPage + 20)}
+            onClick={() => setCountPokemons(countPokemons + 20)}
             ml={2}
             disabled={currentPage === totalPages}
           >

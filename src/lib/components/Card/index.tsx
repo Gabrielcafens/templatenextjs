@@ -39,16 +39,11 @@ const typeColors: { [key: string]: string } = {
   unknown: '#68a090',
 };
 
-export const PokeCard: React.FC<IPokeCard> = ({ name, url }) => {
+export const PokeCard: React.FC<IPokeCard> = ({ name, url }: IPokeCard) => {
   const [pokemonDetails, setPokemonDetails] = useState<IPokemonDetails | null>(
     null
   );
   const router = useRouter();
-
-  const getIdFromUrl = (url: string) => {
-    const segments = url.split('/');
-    return segments[segments.length - 2];
-  };
 
   useEffect(() => {
     const fetchPokemonDetails = async () => {
@@ -75,8 +70,7 @@ export const PokeCard: React.FC<IPokeCard> = ({ name, url }) => {
   }, [url]);
 
   const handleCardClick = () => {
-    const pokemonId = getIdFromUrl(url);
-    router.push(`/pokemonId/${pokemonId}`);
+    router.push(`/pokemonId/${pokemonDetails.id}`);
   };
 
   if (
@@ -99,11 +93,11 @@ export const PokeCard: React.FC<IPokeCard> = ({ name, url }) => {
       onClick={handleCardClick}
     >
       <Image
-        src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${pokemonDetails.id}.gif`}
+        src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonDetails.id}.png`}
         alt={pokemonDetails.name || ''}
-        width="110"
-        height="110"
-        style={{ display: 'block', margin: 'auto' }}
+        boxSize="200px"
+        mx="auto"
+        mb={4}
       />
       <Text
         mt={4}

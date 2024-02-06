@@ -82,12 +82,22 @@ export const PokemonDetails: React.FC = () => {
   useEffect(() => {
     const fetchPokemonDetails = async () => {
       try {
-        if (id) {
+        if (id && /^\d+$/.test(id.toString())) {
           const pokemonId = Number(id);
           const response = await axios.get<IPokemonDetails>(
             `https://pokeapi.co/api/v2/pokemon/${pokemonId}/`
           );
           setPokemonDetails(response.data);
+        } else {
+          console.error('Invalid Pokemon ID:', id);
+          toast({
+            title: 'Invalid Pokemon ID',
+            description:
+              'Please provide a valid Pokemon ID as a positive integer.',
+            status: 'error',
+            duration: 3000,
+            isClosable: true,
+          });
         }
       } catch (error) {
         console.error('Error fetching Pokémon details:', error);
@@ -101,41 +111,39 @@ export const PokemonDetails: React.FC = () => {
         });
       }
     };
+
     fetchPokemonDetails();
   }, [id, toast]);
 
-  const handleBackClick = () => {
+  const handleBackClick = async () => {
     router.push('/');
   };
 
   return (
-    <Box p={4} rounded="md" boxShadow="2xl" textAlign="center">
+    <Box p={4} rounded="md" boxShadow="md" textAlign="center">
       {pokemonDetails ? (
-        <Flex
-          direction={{ base: 'column', md: 'row' }}
-          justify="center"
-          align="center"
-        >
-          <Box
-            width={{ base: '100%', md: '210px' }}
-            mb={{ base: '4', md: '0' }}
-          >
-            <Box
-              bg={typeColors[pokemonDetails.types[0].type.name] || 'teal.500'}
-              p={5}
-              rounded="md"
-              boxShadow="md"
-            >
-              <Image
-                src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonDetails.id}.png`}
-                alt={pokemonDetails.name || ''}
-                boxSize="200px"
-                mx="auto"
-                mb={4}
-              />
-            </Box>
-          </Box>
+        <Flex direction={{ base: 'column' }} justify="center" align="center">
           <Box flex="1" textAlign="left" ml={{ base: '0', md: '4' }}>
+            <Box
+              width={{ base: '100%', md: '210px' }}
+              mb={{ base: '4', md: '0' }}
+            >
+              <Box
+                bg={typeColors[pokemonDetails.types[0].type.name] || 'teal.500'}
+                p={5}
+                rounded="md"
+                boxShadow="md"
+              >
+                <Image
+                  src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${pokemonDetails.id}.gif`}
+                  alt={pokemonDetails.name || ''}
+                  width="110"
+                  height="110"
+                  style={{ display: 'block', margin: 'auto' }}
+                />
+              </Box>
+              <Box flex="1" textAlign="left" ml={{ base: '0', md: '4' }} />
+            </Box>
             <Text fontSize="2xl" fontWeight="bold" mt={2}>
               {pokemonDetails.name || 'Loading...'}
             </Text>
@@ -166,7 +174,7 @@ export const PokemonDetails: React.FC = () => {
             <Text fontSize="md" mt={4}>
               Abilities:{' '}
               {pokemonDetails.abilities.map((ability, index) => (
-                <span key={index}>
+                <Text as="span">
                   {index > 0 && ', '}
                   <ChakraLink
                     href={ability.ability.url}
@@ -177,14 +185,14 @@ export const PokemonDetails: React.FC = () => {
                     {ability.ability.name}
                   </ChakraLink>
                   {ability.is_hidden && ' (Hidden)'}
-                </span>
+                </Text>
               ))}
             </Text>
             <Text fontSize="" mt={4}>
               Stats:
               <Stack mt={2} spacing={3}>
-                {pokemonDetails.stats.map((stat, index) => (
-                  <Box key={index}>
+                {pokemonDetails.stats.map((stat) => (
+                  <Box>
                     <Text>{`${stat.stat.name}: ${stat.base_stat}`}</Text>
                     <Progress
                       color={
@@ -200,7 +208,7 @@ export const PokemonDetails: React.FC = () => {
                 ))}
               </Stack>
             </Text>
-            <Text fontSize="lg" mt={4}>
+            <Text fontSize="md" mt={4}>
               Base Experience:{' '}
               <Progress
                 color={typeColors[pokemonDetails.types[0].type.name] || 'teal'}
@@ -212,10 +220,10 @@ export const PokemonDetails: React.FC = () => {
               />
               <Text mt={1}>{pokemonDetails.base_experience}</Text>
             </Text>
-            <Text fontSize="lg" mt={4}>
+            <Text fontSize="md" mt={4}>
               Forms:{' '}
               {pokemonDetails.forms.map((form, index) => (
-                <span key={index}>
+                <Text as="span">
                   {index > 0 && ', '}
                   <ChakraLink
                     href={form.url}
@@ -225,7 +233,7 @@ export const PokemonDetails: React.FC = () => {
                   >
                     {form.name}
                   </ChakraLink>
-                </span>
+                </Text>
               ))}
             </Text>
             <Button onClick={handleBackClick} mt={8} colorScheme="teal">
