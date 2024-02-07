@@ -89,14 +89,16 @@ export const PokeCard: React.FC<IPokeCard> = ({ name, url }: IPokeCard) => {
 
   return (
     <Box
-      borderWidth="4px"
+      borderWidth="3px"
       borderRadius="lg"
       overflow="hidden"
-      p={6}
+      p={2}
       textAlign="center"
-      bg="gray.800"
+      bg="gray.600"
       color="white"
       boxShadow="md"
+      minWidth={200}
+      maxWidth={200}
       onClick={handleCardClick}
       transition="transform 0.2s ease-in-out"
       _hover={{
@@ -109,7 +111,7 @@ export const PokeCard: React.FC<IPokeCard> = ({ name, url }: IPokeCard) => {
         alt={pokemonDetails.name || ''}
         width="110"
         height="110"
-        style={{ display: 'block', margin: 'auto', marginTop: '-10px' }}
+        style={{ display: 'block', margin: 'auto', marginTop: '-1px' }}
       />
       <Text
         mt={4}

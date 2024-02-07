@@ -100,50 +100,48 @@ export const Home = () => {
     }
   };
   return (
-    <ChakraProvider>
-      <Flex direction="column" w="100vw" h="100vh">
-        <Navbar
-          searchTerm={searchTerm}
-          onSearchChange={handleInputChange}
-          onHomeClick={handleHomeClick}
-        />
-        <Wrap
-          spacing={4}
-          justify="center"
-          mt={20}
-          overflowY="auto"
-          maxHeight="calc(100vh - 200px)"
+    <Flex direction="column" w="100vw" h="100vh" bgColor="gray.800">
+      <Navbar
+        searchTerm={searchTerm}
+        onSearchChange={handleInputChange}
+        onHomeClick={handleHomeClick}
+      />
+      <Wrap
+        spacing={4}
+        justify="center"
+        pt={8}
+        overflowY="auto"
+        maxHeight="calc(100vh - 200px)"
+      >
+        {pokemons.map((pokemon: IPokemon) => (
+          <WrapItem key={pokemon.name}>
+            <Link href={`/pokemonId/${pokemon.name}`}>
+              <PokeCard name={pokemon.name} url={pokemon.url} />
+            </Link>
+          </WrapItem>
+        ))}
+      </Wrap>
+      <Center mt={10}>
+        <Button
+          onClick={() => setCountPokemons(countPokemons - 20)}
+          mr={2}
+          isDisabled={countPokemons === 0}
         >
-          {pokemons.map((pokemon: IPokemon) => (
-            <WrapItem key={pokemon.name}>
-              <Link href={`/pokemonId/${pokemon.name}`}>
-                <PokeCard name={pokemon.name} url={pokemon.url} />
-              </Link>
-            </WrapItem>
-          ))}
-        </Wrap>
+          Prev
+        </Button>
+        <Button
+          onClick={() => setCountPokemons(countPokemons + 20)}
+          ml={2}
+          disabled={currentPage === totalPages}
+        >
+          Next
+        </Button>
+      </Center>
+      {loading && (
         <Center mt={4}>
-          <Button
-            onClick={() => setCountPokemons(countPokemons - 20)}
-            mr={2}
-            isDisabled={countPokemons === 0}
-          >
-            Prev
-          </Button>
-          <Button
-            onClick={() => setCountPokemons(countPokemons + 20)}
-            ml={2}
-            disabled={currentPage === totalPages}
-          >
-            Next
-          </Button>
+          <LoadingProgressBar loading={false} />
         </Center>
-        {loading && (
-          <Center mt={4}>
-            <LoadingProgressBar loading={false} />
-          </Center>
-        )}
-      </Flex>
-    </ChakraProvider>
+      )}
+    </Flex>
   );
 };

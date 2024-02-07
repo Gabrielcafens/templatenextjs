@@ -15,17 +15,15 @@ export const Navbar: React.FC<NavbarProps> = ({
 }) => {
   return (
     <Flex
-      position="fixed"
+      position="sticky"
       top={0}
-      left={0}
-      right={0}
       align="center"
       justify="space-between"
       p={4}
       bg="gray.700"
       color="white"
       boxShadow="md"
-      zIndex={1}
+      zIndex={0}
     >
       <Button
         onClick={onHomeClick}

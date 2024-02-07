@@ -132,7 +132,7 @@ export const PokemonDetails: React.FC = () => {
               backgroundPosition="center"
               height="700px"
             >
-              <AspectRatio ratio={3.5 / 3}>
+              <AspectRatio ratio={2.9 / 3}>
                 <Image
                   src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonDetails.id}.png`}
                   alt={pokemonDetails.name || ''}
