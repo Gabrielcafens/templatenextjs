@@ -89,21 +89,27 @@ export const PokeCard: React.FC<IPokeCard> = ({ name, url }: IPokeCard) => {
 
   return (
     <Box
-      borderWidth="1px"
+      borderWidth="4px"
       borderRadius="lg"
       overflow="hidden"
-      p={4}
+      p={6}
       textAlign="center"
-      bg="white"
+      bg="gray.800"
+      color="white"
       boxShadow="md"
       onClick={handleCardClick}
+      transition="transform 0.2s ease-in-out"
+      _hover={{
+        transform: 'scale(1.05)',
+      }}
     >
       <Image
-        src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonDetails.id}.png`}
+        // src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonDetails.id}.png`}
+        src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${pokemonDetails.id}.gif`}
         alt={pokemonDetails.name || ''}
-        boxSize="200px"
-        mx="auto"
-        mb={4}
+        width="110"
+        height="110"
+        style={{ display: 'block', margin: 'auto', marginTop: '-10px' }}
       />
       <Text
         mt={4}
@@ -120,12 +126,12 @@ export const PokeCard: React.FC<IPokeCard> = ({ name, url }: IPokeCard) => {
         {pokemonDetails.types.map((type) => (
           <Box
             key={type.type.name}
-            bg={typeColors[type.type.name] || 'gray.500'}
+            bg={typeColors[type.type.name] || 'gray.700'}
             color="white"
-            px={2}
+            px={1}
             py={1}
             borderRadius="md"
-            mr={2}
+            mr={1}
             fontSize="sm"
           >
             {type.type.name}

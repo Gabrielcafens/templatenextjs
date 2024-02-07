@@ -9,6 +9,7 @@ import {
   Button,
   useToast,
   Flex,
+  AspectRatio,
 } from '@chakra-ui/react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
@@ -106,34 +107,42 @@ export const PokemonDetails: React.FC = () => {
   };
 
   return (
-    <Box p={4} rounded="md" boxShadow="md" textAlign="center">
+    <Box p={4} rounded="md" boxShadow="md" textAlign="center" bg="gray.100">
       {pokemonDetails ? (
         <Flex
-          direction={{ base: 'column-reverse' }}
+          direction={{ base: 'column', md: 'row' }}
           justify="center"
           align="center"
+          gap={4}
         >
-          <Box flex="1" textAlign="left" ml={{ base: '0', md: '4' }}>
+          <Box
+            flex="1"
+            textAlign={{ base: 'center', md: 'left' }}
+            ml={{ base: '0', md: '4' }}
+          >
             <Box
-              width={{ base: '100%', md: '210px' }}
-              mb={{ base: '4', md: '1' }}
+              bg={typeColors[pokemonDetails.types[0].type.name] || 'teal.500'}
+              p={6}
+              rounded="md"
+              boxShadow="md"
+              position="relative"
+              overflow="hidden"
+              backgroundImage="url('/forest-background.jpg')"
+              backgroundSize="cover"
+              backgroundPosition="center"
+              height="700px"
             >
-              <Box
-                bg={typeColors[pokemonDetails.types[0].type.name] || 'teal.500'}
-                p={5}
-                rounded="md"
-                boxShadow="md"
-              >
+              <AspectRatio ratio={3.5 / 3}>
                 <Image
-                  src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${pokemonDetails.id}.gif`}
+                  src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonDetails.id}.png`}
                   alt={pokemonDetails.name || ''}
-                  width="110"
-                  height="110"
-                  style={{ display: 'block', margin: 'auto' }}
+                  boxSize="220px"
+                  mx="-1"
                 />
-              </Box>
-              <Box flex="1" textAlign="left" ml={{ base: '0', md: '4' }} />
+              </AspectRatio>
             </Box>
+          </Box>
+          <Box flex="1" textAlign="left" ml={{ base: '0', md: '4' }}>
             <Text fontSize="2xl" fontWeight="bold" mt={2}>
               {pokemonDetails.name || 'Loading...'}
             </Text>

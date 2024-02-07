@@ -14,7 +14,6 @@ export const Navbar: React.FC<NavbarProps> = ({
   onHomeClick,
 }) => {
   return (
-    // Componente Flex do Chakra UI para criar um contêiner flexível
     <Flex
       position="fixed"
       top={0}
