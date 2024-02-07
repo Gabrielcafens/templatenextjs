@@ -4,12 +4,12 @@ import {
   WrapItem,
   Button,
   Center,
-  ChakraProvider,
   useToast,
 } from '@chakra-ui/react';
 import axios from 'axios';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import { useForm } from 'react-hook-form';
 
 import { PokeCard } from '~/lib/components/Card';
 import { LoadingProgressBar } from '~/lib/components/LoadingProgressBar';
@@ -39,9 +39,8 @@ export const Home = () => {
       setTotalPages(Math.ceil(response.data.count / countPokemons));
     } catch (error) {
       toast({
-        title: 'Error fetching Pokemon details',
-        description:
-          'There was an error fetching the details for this Pokemon.',
+        title: 'Erro ao buscar detalhes do Pokémon',
+        description: 'Ocorreu um erro ao buscar os detalhes deste Pokémon.',
         status: 'error',
         duration: 3000,
         isClosable: true,
@@ -70,9 +69,8 @@ export const Home = () => {
       setCurrentPage(1);
     } catch (error) {
       toast({
-        title: 'Error fetching Pokemon details',
-        description:
-          'There was an error fetching the details for this Pokemon.',
+        title: 'Erro ao buscar detalhes do Pokémon',
+        description: 'Ocorreu um erro ao buscar os detalhes deste Pokémon.',
         status: 'error',
         duration: 3000,
         isClosable: true,
@@ -84,7 +82,12 @@ export const Home = () => {
 
   const handleInputChange = async (term: string) => {
     setSearchTerm(term);
-    await handleSearch();
+
+    if (term === '') {
+      fetchPokemons();
+    } else {
+      await handleSearch();
+    }
   };
 
   // Função para lidar com o clique no botão Home, reiniciando os parâmetros
@@ -112,6 +115,7 @@ export const Home = () => {
         pt={8}
         overflowY="auto"
         maxHeight="calc(100vh - 200px)"
+        minHeight="calc(100vh - 16rem)"
       >
         {pokemons.map((pokemon: IPokemon) => (
           <WrapItem key={pokemon.name}>
@@ -121,7 +125,7 @@ export const Home = () => {
           </WrapItem>
         ))}
       </Wrap>
-      <Center mt={10}>
+      <Center mt={10} ml="auto" mr={2}>
         <Button
           onClick={() => setCountPokemons(countPokemons - 20)}
           mr={2}

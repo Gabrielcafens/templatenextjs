@@ -62,9 +62,8 @@ export const PokeCard: React.FC<IPokeCard> = ({ name, url }: IPokeCard) => {
         });
       } catch (error) {
         toast({
-          title: 'Error fetching Pokemon details',
-          description:
-            'There was an error fetching the details for this Pokemon.',
+          title: 'Erro ao buscar detalhes do Pokémon',
+          description: 'Ocorreu um erro ao buscar os detalhes deste Pokémon.',
           status: 'error',
           duration: 3000,
           isClosable: true,

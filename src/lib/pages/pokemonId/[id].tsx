@@ -9,7 +9,6 @@ import {
   Button,
   useToast,
   Flex,
-  AspectRatio,
 } from '@chakra-ui/react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
@@ -89,9 +88,8 @@ export const PokemonDetails: React.FC = () => {
         setPokemonDetails(response.data);
       } catch (error) {
         toast({
-          title: 'Error fetching Pokemon details',
-          description:
-            'There was an error fetching the details for this Pokemon.',
+          title: 'Erro ao buscar detalhes do Pokémon',
+          description: 'Ocorreu um erro ao buscar os detalhes deste Pokémon.',
           status: 'error',
           duration: 3000,
           isClosable: true,
@@ -107,43 +105,52 @@ export const PokemonDetails: React.FC = () => {
   };
 
   return (
-    <Box p={4} rounded="md" boxShadow="md" textAlign="center" bg="gray.100">
+    <Box
+      p={4}
+      rounded="md"
+      boxShadow="md"
+      textAlign="center"
+      bg="gray.100"
+      height="100vh"
+    >
       {pokemonDetails ? (
         <Flex
           direction={{ base: 'column', md: 'row' }}
           justify="center"
           align="center"
           gap={4}
+          width="100%"
+          height="100%"
         >
-          <Box
-            flex="1"
-            textAlign={{ base: 'center', md: 'left' }}
-            ml={{ base: '0', md: '4' }}
+          <Flex
+            bg={typeColors[pokemonDetails.types[0].type.name] || 'teal.500'}
+            rounded="md"
+            boxShadow="md"
+            justifyContent="center"
+            alignItems="center"
+            height="100%"
+            width="100%"
           >
-            <Box
-              bg={typeColors[pokemonDetails.types[0].type.name] || 'teal.500'}
-              p={6}
-              rounded="md"
-              boxShadow="md"
-              position="relative"
-              overflow="hidden"
-              backgroundImage="url('/forest-background.jpg')"
-              backgroundSize="cover"
-              backgroundPosition="center"
-              height="700px"
+            <Image
+              src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonDetails.id}.png`}
+              alt={pokemonDetails.name || ''}
+              width={{ base: 150, md: 400 }}
+              height={{ base: 150, md: 400 }}
+            />
+          </Flex>
+          <Stack
+            textAlign="left"
+            ml={{ base: '0', md: '4' }}
+            height="100%"
+            width="100%"
+            justifyContent="space-between"
+          >
+            <Text
+              fontSize="2xl"
+              fontWeight="bold"
+              mt={2}
+              textTransform="capitalize"
             >
-              <AspectRatio ratio={2.9 / 3}>
-                <Image
-                  src={`https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${pokemonDetails.id}.png`}
-                  alt={pokemonDetails.name || ''}
-                  boxSize="220px"
-                  mx="-1"
-                />
-              </AspectRatio>
-            </Box>
-          </Box>
-          <Box flex="1" textAlign="left" ml={{ base: '0', md: '4' }}>
-            <Text fontSize="2xl" fontWeight="bold" mt={2}>
               {pokemonDetails.name || 'Loading...'}
             </Text>
             <Text>ID: {pokemonDetails.id}</Text>
@@ -172,7 +179,7 @@ export const PokemonDetails: React.FC = () => {
             <Text fontSize="md" mt={4}>
               Abilities:{' '}
               {pokemonDetails.abilities.map((ability, index) => (
-                <Text as="span">
+                <Text as="span" textTransform="capitalize">
                   {index > 0 && ', '}
                   <ChakraLink
                     href={ability.ability.url}
@@ -191,7 +198,7 @@ export const PokemonDetails: React.FC = () => {
               <Stack mt={2} spacing={3}>
                 {pokemonDetails.stats.map((stat) => (
                   <Box>
-                    <Text>{`${stat.stat.name}: ${stat.base_stat}`}</Text>
+                    <Text textTransform="capitalize">{`${stat.stat.name}: ${stat.base_stat}`}</Text>
                     <Progress
                       value={stat.base_stat}
                       max={100}
@@ -203,8 +210,8 @@ export const PokemonDetails: React.FC = () => {
                 ))}
               </Stack>
             </Text>
-            <Text fontSize="md" mt={4}>
-              Base Experience:{' '}
+            <Text fontSize="md" mt={4} textTransform="capitalize">
+              base experience:{' '}
               <Progress
                 value={pokemonDetails.base_experience}
                 max={300}
@@ -224,6 +231,7 @@ export const PokemonDetails: React.FC = () => {
                     target="_blank"
                     rel="noopener noreferrer"
                     color="teal.500"
+                    textTransform="capitalize"
                   >
                     {form.name}
                   </ChakraLink>
@@ -233,7 +241,7 @@ export const PokemonDetails: React.FC = () => {
             <Button onClick={handleBackClick} mt={1} colorScheme="whatsapp">
               Voltar para a lista
             </Button>
-          </Box>
+          </Stack>
         </Flex>
       ) : (
         <Text>Loading...</Text>
