@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import {
   Flex,
   Wrap,
@@ -9,11 +10,11 @@ import {
 import axios from 'axios';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form';
 
 import { PokeCard } from '~/lib/components/Card';
 import { LoadingProgressBar } from '~/lib/components/LoadingProgressBar';
 import { Navbar } from '~/lib/components/Navbar';
+import { NoResultsCard } from '~/lib/components/NoResultsCard';
 
 interface IPokemon {
   name: string;
@@ -117,14 +118,21 @@ export const Home = () => {
         maxHeight="calc(100vh - 200px)"
         minHeight="calc(100vh - 16rem)"
       >
-        {pokemons.map((pokemon: IPokemon) => (
-          <WrapItem key={pokemon.name}>
-            <Link href={`/pokemonId/${pokemon.name}`}>
-              <PokeCard name={pokemon.name} url={pokemon.url} />
-            </Link>
+        {pokemons.length === 0 ? (
+          <WrapItem>
+            <NoResultsCard />
           </WrapItem>
-        ))}
+        ) : (
+          pokemons.map((pokemon: IPokemon) => (
+            <WrapItem key={pokemon.name}>
+              <Link href={`/pokemonId/${pokemon.name}`}>
+                <PokeCard name={pokemon.name} url={pokemon.url} />
+              </Link>
+            </WrapItem>
+          ))
+        )}
       </Wrap>
+
       <Center mt={10} ml="auto" mr={2}>
         <Button
           onClick={() => setCountPokemons(countPokemons - 20)}
@@ -136,7 +144,7 @@ export const Home = () => {
         <Button
           onClick={() => setCountPokemons(countPokemons + 20)}
           ml={2}
-          disabled={currentPage === totalPages}
+          isDisabled={currentPage === totalPages}
         >
           Next
         </Button>
