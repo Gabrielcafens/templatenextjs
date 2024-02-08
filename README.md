@@ -39,8 +39,10 @@ Acesse a Pokedex:
 Abra o navegador em http://localhost:3001 e explore o mundo dos Pokemons!
 
 Imagens
-Tela inicial com listagem de Pokemons: link para a imagem
-Detalhes de um Pokemon específico: link para a imagem
+Tela inicial com listagem de Pokemons: ![image](https://github.com/Gabrielcafens/nextchakrapokedex/assets/95833512/371aee59-8e1c-4a8d-9220-6753e42e9b7e)
+
+Detalhes de um Pokemon específico: ![image](https://github.com/Gabrielcafens/nextchakrapokedex/assets/95833512/31d01445-355b-4465-9a20-8da00639b22a)
+
 Contribuindo
 Sinta-se à vontade para contribuir com o projeto!
 Para reportar bugs ou enviar sugestões, abra um issue no GitHub.
