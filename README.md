@@ -43,6 +43,8 @@ Tela inicial com listagem de Pokemons: ![image](https://github.com/Gabrielcafens
 
 Detalhes de um Pokemon específico: ![image](https://github.com/Gabrielcafens/nextchakrapokedex/assets/95833512/31d01445-355b-4465-9a20-8da00639b22a)
 
+Pokemon não encontrado: ![image](https://github.com/Gabrielcafens/nextchakrapokedex/assets/95833512/202b13a5-dd8d-47ab-9750-04b3490740e9)
+
 ## Links Úteis
 
 - [Repositório GitHub](https://github.com/seu_usuario/pokedex-nextjs.git)
