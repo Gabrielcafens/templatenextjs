@@ -43,22 +43,22 @@ Tela inicial com listagem de Pokemons: ![image](https://github.com/Gabrielcafens
 
 Detalhes de um Pokemon específico: ![image](https://github.com/Gabrielcafens/nextchakrapokedex/assets/95833512/31d01445-355b-4465-9a20-8da00639b22a)
 
-Contribuindo
-Sinta-se à vontade para contribuir com o projeto!
-Para reportar bugs ou enviar sugestões, abra um issue no GitHub.
-Licença
-Este projeto está sob a Licença MIT.
+## Links Úteis
 
-Links úteis
-Repositório GitHub
-PokeAPI
-Next.js
-Chakra UI
-Agradecimentos
-Comunidade Next.js e Chakra UI
-Observações
-Este projeto está em constante desenvolvimento e novas funcionalidades serão adicionadas futuramente.
-Aproveite a sua Pokedex!
+- [Repositório GitHub](https://github.com/seu_usuario/pokedex-nextjs.git)
+- [PokeAPI](https://pokeapi.co/)
+- [Next.js](https://nextjs.org/)
+- [Chakra UI](https://chakra-ui.com/)
+
+## Agradecimentos
+
+- Comunidade Next.js e Chakra UI
+
+## Observações
+
+- Este projeto está em constante desenvolvimento e novas funcionalidades serão adicionadas futuramente.
+- Aproveite a sua Pokedex!
+
 ```                         ___
 
                           ___
